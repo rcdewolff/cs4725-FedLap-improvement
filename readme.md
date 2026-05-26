@@ -1,3 +1,19 @@
+# CS4725 FedLap improvements
+
+This repo was forked from FedLap to try to improve it for a university project (the CS4725 course at TU Delft).
+
+How to run: Create a virtual environment with Python 3.10, activate it, and run `pip install -r requirements.txt`.
+
+You can run the initial attempt at an experiment with added differential privacy in the online phase by running (**it takes a while to run**):
+
+```bash
+python src/simulations/dp_grid_search.py
+
+python dp_tradeoff_plots.py --csv <path-to-results.csv>
+```
+
+The results for this initial experiment can be seen in the `./example_experiment_results/` folder.
+
 # FedLap
 ## To run the code
 1. Clone the repository to your *local_directory* with:
