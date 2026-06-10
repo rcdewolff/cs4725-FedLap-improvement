@@ -86,7 +86,7 @@ class GNNServer(Server, GNNClient):
         data_type="feature",
         spectral_len=0,
         **kwargs,
-    ) -> None:
+    ):
         share = self.initialize(
             smodel_type=smodel_type,
             fmodel_type=fmodel_type,
@@ -105,6 +105,8 @@ class GNNServer(Server, GNNClient):
                 data_type=data_type,
                 **kwargs,
             )
+
+        return share
 
     def joint_train_g(
         self,

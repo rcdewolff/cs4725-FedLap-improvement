@@ -210,7 +210,7 @@ def run_privacy_attack_experiment(
     train_epochs=config.model.iterations,
     attack_epochs=1,
     data_type="f+s",
-    smodel_type="Laplace",
+    smodel_type="SpectralLaplace",
     fmodel_type="GNN",
     structure_type="hop2vec",
 ):
@@ -224,6 +224,8 @@ def run_privacy_attack_experiment(
 
         seed_results = {}
         for mode_name, dp_enabled in [("baseline", False), ("dp", True)]:
+            LOGGER.info(f"\nRunning experiment with seed {seed_value} and mode {mode_name}.")
+
             config.dp.enabled = dp_enabled
 
             graph_train = deepcopy(base_graph)
@@ -266,6 +268,8 @@ def run_privacy_attack_experiment(
                     "mode": str(config.dp.mode),
                 },
             }
+
+            LOGGER.info(f"Results:\n {seed_results[mode_name]} \n")
 
         results[str(seed_value)] = seed_results
 
