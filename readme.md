@@ -14,7 +14,7 @@ You can run the experiments by running (**Warning: Can take ~1h to run**):
 python src/simulations/online_phase_dlg_experiments.py
 ```
 
-The results for this initial experiment can be seen in the `./example_experiment_results/` folder.
+
 
 # (ORIGINAL README) FedLap
 ## To run the code
