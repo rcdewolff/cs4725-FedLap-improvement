@@ -708,3 +708,96 @@ def sum_lod(x: List, coef=None):
         return z
     else:
         return sum([weight * val for weight, val in zip(coef, x)])
+
+
+def _iter_tensors(grads, sfv_mode="all"):
+    if grads is None:
+        return
+    if isinstance(grads, dict):
+        for key, val in grads.items():
+            if key == "SFV":
+                if sfv_mode in ["all", "sfv"]:
+                    yield from _iter_tensors(val, sfv_mode="all")
+                continue
+            if sfv_mode == "sfv":
+                continue
+            yield from _iter_tensors(val, sfv_mode=sfv_mode)
+    elif isinstance(grads, list):
+        for val in grads:
+            yield from _iter_tensors(val, sfv_mode=sfv_mode)
+    elif torch.is_tensor(grads):
+        yield grads
+
+
+def grads_l2_norm(grads, sfv_mode="all"):
+    total = None
+    for tensor in _iter_tensors(grads, sfv_mode=sfv_mode):
+        if tensor is None:
+            continue
+        value = torch.sum(tensor.detach() ** 2)
+        total = value if total is None else total + value
+    if total is None:
+        total = torch.tensor(0.0, device=device)
+    return torch.sqrt(total)
+
+
+def scale_grads_(grads, scale, sfv_mode="all"):
+    for tensor in _iter_tensors(grads, sfv_mode=sfv_mode):
+        if tensor is None:
+            continue
+        tensor.mul_(scale)
+
+
+def clip_grads_(grads, max_norm, eps=1e-6, separate_sfv=False):
+    if max_norm is None or max_norm <= 0:
+        return 0.0
+    if not separate_sfv:
+        norm = grads_l2_norm(grads, sfv_mode="all")
+        norm_val = norm.item()
+        if norm_val <= max_norm:
+            return norm_val
+        scale = max_norm / (norm_val + eps)
+        scale_grads_(grads, scale, sfv_mode="all")
+        return norm_val
+
+    sfv_norm = grads_l2_norm(grads, sfv_mode="sfv")
+    sfv_val = sfv_norm.item()
+    if sfv_val > max_norm:
+        scale = max_norm / (sfv_val + eps)
+        scale_grads_(grads, scale, sfv_mode="sfv")
+
+    non_sfv_norm = grads_l2_norm(grads, sfv_mode="non_sfv")
+    non_sfv_val = non_sfv_norm.item()
+    if non_sfv_val > max_norm:
+        scale = max_norm / (non_sfv_val + eps)
+        scale_grads_(grads, scale, sfv_mode="non_sfv")
+
+    return max(sfv_val, non_sfv_val)
+
+
+def add_noise_(grads, std):
+    if std is None or std <= 0:
+        return
+    for tensor in _iter_tensors(grads):
+        if tensor is None:
+            continue
+        noise = torch.randn_like(tensor) * std
+        tensor.add_(noise)
+
+
+def grads_numel(grads):
+    total = 0
+    for tensor in _iter_tensors(grads):
+        if tensor is None:
+            continue
+        total += tensor.numel()
+    return total
+
+
+def grads_bytes(grads):
+    total = 0
+    for tensor in _iter_tensors(grads):
+        if tensor is None:
+            continue
+        total += tensor.numel() * tensor.element_size()
+    return total

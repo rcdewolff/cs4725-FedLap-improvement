@@ -15,6 +15,7 @@ class Config:
         self.fedsage = FedSAGEConfig(self.config["fedsage"])
         self.fedpub = PubMedConfig(self.config["fedpub"])
         self.fedgcn = FedGCNConfig(self.config["fedgcn"])
+        self.dp = DPConfig(self.config.get("dp", None))
 
     def load_config(path):
         with open(path) as f:
@@ -170,3 +171,18 @@ class FedGCNConfig:
     def load_config(self, feedgcn):
         self.num_hops = feedgcn["num_hops"]
         self.iid_beta = feedgcn["iid_beta"]
+
+
+class DPConfig:
+    def __init__(self, dp=None):
+        if dp is None:
+            dp = {}
+        self.load_config(dp)
+
+    def load_config(self, dp):
+        self.enabled = dp.get("enabled", False)
+        self.clip_norm = dp.get("clip_norm", 1.0)
+        self.noise_multiplier = dp.get("noise_multiplier", 0.0)
+        self.delta = dp.get("delta", 1e-5)
+        self.mode = dp.get("mode", "central")
+        self.separate_sfv = dp.get("separate_sfv", True)

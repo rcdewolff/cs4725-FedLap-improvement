@@ -131,7 +131,22 @@ class Server(Client):
 
             if FL:
                 clients_grads = self.get_grads()
+                if config.dp.enabled:
+                    for client_grads in clients_grads:
+                        clip_grads_(
+                            client_grads,
+                            config.dp.clip_norm,
+                            separate_sfv=config.dp.separate_sfv,
+                        )
+                        if config.dp.mode == "local":
+                            std = config.dp.noise_multiplier * config.dp.clip_norm
+                            add_noise_(client_grads, std)
                 grads = sum_lod(clients_grads, coef)
+                if config.dp.enabled and config.dp.mode == "central":
+                    std = config.dp.noise_multiplier * config.dp.clip_norm
+                    if len(self.clients) > 0:
+                        std = std / len(self.clients)
+                    add_noise_(grads, std)
                 self.share_grads(grads)
 
             self.update_models()
@@ -214,7 +229,22 @@ class Server(Client):
 
             if FL:
                 clients_grads = self.get_grads(True)
+                if config.dp.enabled:
+                    for client_grads in clients_grads:
+                        clip_grads_(
+                            client_grads,
+                            config.dp.clip_norm,
+                            separate_sfv=config.dp.separate_sfv,
+                        )
+                        if config.dp.mode == "local":
+                            std = config.dp.noise_multiplier * config.dp.clip_norm
+                            add_noise_(client_grads, std)
                 grads = sum_lod(clients_grads, coef)
+                if config.dp.enabled and config.dp.mode == "central":
+                    std = config.dp.noise_multiplier * config.dp.clip_norm
+                    if len(self.clients) > 0:
+                        std = std / len(self.clients)
+                    add_noise_(grads, std)
                 self.share_grads(grads)
 
             # if epoch < epochs - 1:

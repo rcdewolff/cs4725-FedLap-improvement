@@ -18,7 +18,7 @@ model:
   weight_decay: 0.0005
   dropout: 0.7
   gnn_layer_type: sage
-  smodel_type: DGCN   # GNN, DGCN
+  smodel_type: SpectralLaplace   # GNN, DGCN
   fmodel_type: same   #GNN, DGCN, same
   iterations: 60
   metric: acc
@@ -90,3 +90,10 @@ fedpub:
 fedgcn:
   num_hops: 2
   iid_beta: 10000
+dp:
+  enabled: false
+  clip_norm: 1.0
+  noise_multiplier: 1.0
+  delta: 1.0e-5
+  mode: local
+  separate_sfv: true
