@@ -1,0 +1,185 @@
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{llc}
+\toprule
+\multicolumn{3}{c}{\textbf{Chameleon}} \\
+\multicolumn{3}{c}{Each cell: Acc, MSE, CosSim, FeatCorr (values $\times 100$)} \\
+\midrule
+\multirow{5}{*}{e=10} & $\sigma=0.000$ & \makecell[l]{$22.78 \pm 0.36$ , $4.39 \pm 0.04$ , $0.17 \pm 0.22$ , $5.23 \pm 0.14$} \\
+ & $\sigma=0.005$ & \makecell[l]{$21.20 \pm 0.99$ , $4.51 \pm 0.24$ , $0.21 \pm 0.12$ , $5.23 \pm 0.31$} \\
+ & $\sigma=0.010$ & \makecell[l]{$21.30 \pm 1.57$ , $5.18 \pm 0.04$ , $0.04 \pm 0.17$ , $5.16 \pm 0.19$} \\
+ & $\sigma=0.020$ & \makecell[l]{$20.74 \pm 0.69$ , $5.72 \pm 0.09$ , $0.48 \pm 0.18$ , $5.21 \pm 0.22$} \\
+ & $\sigma=0.050$ & \makecell[l]{$20.39 \pm 1.10$ , $6.50 \pm 0.18$ , $0.10 \pm 0.09$ , $5.06 \pm 0.27$} \\
+\midrule
+\multirow{5}{*}{e=30} & $\sigma=0.000$ & \makecell[l]{$25.98 \pm 0.09$ , $6.93 \pm 1.73$ , $1.11 \pm 0.41$ , $5.37 \pm 0.34$} \\
+ & $\sigma=0.005$ & \makecell[l]{$22.61 \pm 0.56$ , $4.54 \pm 0.09$ , $0.48 \pm 0.20$ , $5.47 \pm 0.22$} \\
+ & $\sigma=0.010$ & \makecell[l]{$22.16 \pm 0.08$ , $5.40 \pm 0.04$ , $0.11 \pm 0.26$ , $5.19 \pm 0.27$} \\
+ & $\sigma=0.020$ & \makecell[l]{$21.65 \pm 0.79$ , $5.89 \pm 0.07$ , $0.13 \pm 0.16$ , $5.24 \pm 0.27$} \\
+ & $\sigma=0.050$ & \makecell[l]{$21.08 \pm 0.37$ , $6.59 \pm 0.08$ , $0.10 \pm 0.18$ , $5.09 \pm 0.32$} \\
+\midrule
+\multirow{5}{*}{e=100} & $\sigma=0.000$ & \makecell[l]{$34.17 \pm 1.60$ , $6.23 \pm 1.73$ , $0.98 \pm 0.30$ , $5.28 \pm 0.53$} \\
+ & $\sigma=0.005$ & \makecell[l]{$23.65 \pm 0.56$ , $5.65 \pm 1.05$ , $0.56 \pm 0.18$ , $5.38 \pm 0.32$} \\
+ & $\sigma=0.010$ & \makecell[l]{$23.33 \pm 1.26$ , $6.01 \pm 0.09$ , $0.14 \pm 0.11$ , $5.16 \pm 0.21$} \\
+ & $\sigma=0.020$ & \makecell[l]{$22.95 \pm 0.13$ , $6.88 \pm 0.36$ , $0.19 \pm 0.16$ , $5.15 \pm 0.32$} \\
+ & $\sigma=0.050$ & \makecell[l]{$21.90 \pm 0.86$ , $7.28 \pm 0.74$ , $-0.18 \pm 0.22$ , $5.12 \pm 0.08$} \\
+\bottomrule
+\end{tabular}
+\caption{Privacy-utility trade-off results (datasets 1--1)}
+\label{tab:results_1}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{llc}
+\toprule
+\multicolumn{3}{c}{\textbf{CiteSeer}} \\
+\multicolumn{3}{c}{Each cell: Acc, MSE, CosSim, FeatCorr (values $\times 100$)} \\
+\midrule
+\multirow{5}{*}{e=10} & $\sigma=0.000$ & \makecell[l]{$65.63 \pm 1.39$ , $5.50 \pm 0.41$ , $0.80 \pm 0.18$ , $4.33 \pm 0.17$} \\
+ & $\sigma=0.005$ & \makecell[l]{$55.49 \pm 2.74$ , $5.59 \pm 0.64$ , $1.10 \pm 0.08$ , $4.52 \pm 0.17$} \\
+ & $\sigma=0.010$ & \makecell[l]{$46.57 \pm 5.45$ , $6.02 \pm 0.22$ , $0.87 \pm 0.19$ , $4.33 \pm 0.13$} \\
+ & $\sigma=0.020$ & \makecell[l]{$37.11 \pm 6.84$ , $7.07 \pm 0.08$ , $0.46 \pm 0.12$ , $4.07 \pm 0.06$} \\
+ & $\sigma=0.050$ & \makecell[l]{$28.54 \pm 4.01$ , $7.23 \pm 0.21$ , $0.13 \pm 0.09$ , $4.08 \pm 0.10$} \\
+\midrule
+\multirow{5}{*}{e=30} & $\sigma=0.000$ & \makecell[l]{$65.80 \pm 0.03$ , $6.21 \pm 0.29$ , $0.71 \pm 0.19$ , $4.33 \pm 0.07$} \\
+ & $\sigma=0.005$ & \makecell[l]{$65.83 \pm 0.31$ , $6.24 \pm 0.21$ , $0.52 \pm 0.18$ , $4.26 \pm 0.14$} \\
+ & $\sigma=0.010$ & \makecell[l]{$64.15 \pm 0.88$ , $6.18 \pm 0.25$ , $0.67 \pm 0.10$ , $4.36 \pm 0.08$} \\
+ & $\sigma=0.020$ & \makecell[l]{$58.70 \pm 4.35$ , $7.54 \pm 0.39$ , $0.37 \pm 0.15$ , $4.09 \pm 0.14$} \\
+ & $\sigma=0.050$ & \makecell[l]{$40.87 \pm 6.35$ , $8.61 \pm 0.75$ , $0.11 \pm 0.12$ , $3.91 \pm 0.04$} \\
+\midrule
+\multirow{5}{*}{e=100} & $\sigma=0.000$ & \makecell[l]{$67.41 \pm 0.13$ , $6.62 \pm 0.11$ , $0.66 \pm 0.20$ , $4.26 \pm 0.08$} \\
+ & $\sigma=0.005$ & \makecell[l]{$66.27 \pm 0.27$ , $7.41 \pm 0.43$ , $0.57 \pm 0.10$ , $4.10 \pm 0.12$} \\
+ & $\sigma=0.010$ & \makecell[l]{$65.59 \pm 1.01$ , $7.13 \pm 0.29$ , $0.45 \pm 0.06$ , $4.07 \pm 0.08$} \\
+ & $\sigma=0.020$ & \makecell[l]{$64.39 \pm 0.78$ , $7.34 \pm 0.77$ , $0.39 \pm 0.03$ , $4.09 \pm 0.06$} \\
+ & $\sigma=0.050$ & \makecell[l]{$61.04 \pm 1.21$ , $10.01 \pm 0.45$ , $0.20 \pm 0.19$ , $3.90 \pm 0.02$} \\
+\bottomrule
+\end{tabular}
+\caption{Privacy-utility trade-off results (datasets 2--2)}
+\label{tab:results_2}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{llc}
+\toprule
+\multicolumn{3}{c}{\textbf{Cora}} \\
+\multicolumn{3}{c}{Each cell: Acc, MSE, CosSim, FeatCorr (values $\times 100$)} \\
+\midrule
+\multirow{5}{*}{e=10} & $\sigma=0.000$ & \makecell[l]{$54.32 \pm 2.09$ , $8.39 \pm 2.33$ , $1.38 \pm 0.46$ , $4.79 \pm 0.07$} \\
+ & $\sigma=0.005$ & \makecell[l]{$42.47 \pm 3.46$ , $6.18 \pm 0.39$ , $0.76 \pm 0.32$ , $4.83 \pm 0.34$} \\
+ & $\sigma=0.010$ & \makecell[l]{$36.54 \pm 5.03$ , $6.41 \pm 0.08$ , $1.04 \pm 0.38$ , $4.93 \pm 0.20$} \\
+ & $\sigma=0.020$ & \makecell[l]{$33.73 \pm 4.56$ , $7.73 \pm 0.26$ , $0.53 \pm 0.02$ , $4.61 \pm 0.05$} \\
+ & $\sigma=0.050$ & \makecell[l]{$29.32 \pm 0.83$ , $8.89 \pm 0.36$ , $0.26 \pm 0.10$ , $4.34 \pm 0.12$} \\
+\midrule
+\multirow{5}{*}{e=30} & $\sigma=0.000$ & \makecell[l]{$75.01 \pm 0.75$ , $5.48 \pm 0.20$ , $1.13 \pm 0.28$ , $4.96 \pm 0.06$} \\
+ & $\sigma=0.005$ & \makecell[l]{$55.67 \pm 2.65$ , $6.59 \pm 0.44$ , $0.94 \pm 0.31$ , $4.63 \pm 0.03$} \\
+ & $\sigma=0.010$ & \makecell[l]{$54.00 \pm 2.76$ , $6.77 \pm 0.24$ , $0.64 \pm 0.24$ , $4.85 \pm 0.22$} \\
+ & $\sigma=0.020$ & \makecell[l]{$49.18 \pm 4.58$ , $8.18 \pm 0.33$ , $0.27 \pm 0.17$ , $4.50 \pm 0.18$} \\
+ & $\sigma=0.050$ & \makecell[l]{$33.75 \pm 3.30$ , $10.27 \pm 0.32$ , $0.19 \pm 0.20$ , $4.35 \pm 0.23$} \\
+\midrule
+\multirow{5}{*}{e=100} & $\sigma=0.000$ & \makecell[l]{$81.36 \pm 0.84$ , $5.47 \pm 0.26$ , $0.86 \pm 0.08$ , $4.88 \pm 0.10$} \\
+ & $\sigma=0.005$ & \makecell[l]{$53.75 \pm 2.66$ , $6.74 \pm 0.13$ , $0.49 \pm 0.11$ , $4.66 \pm 0.13$} \\
+ & $\sigma=0.010$ & \makecell[l]{$52.17 \pm 1.74$ , $7.16 \pm 0.24$ , $0.59 \pm 0.08$ , $4.59 \pm 0.18$} \\
+ & $\sigma=0.020$ & \makecell[l]{$53.77 \pm 1.36$ , $8.56 \pm 1.06$ , $0.46 \pm 0.25$ , $4.47 \pm 0.10$} \\
+ & $\sigma=0.050$ & \makecell[l]{$47.75 \pm 3.13$ , $12.03 \pm 1.45$ , $0.23 \pm 0.28$ , $4.30 \pm 0.23$} \\
+\bottomrule
+\end{tabular}
+\caption{Privacy-utility trade-off results (datasets 3--3)}
+\label{tab:results_3}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{llc}
+\toprule
+\multicolumn{3}{c}{\textbf{PubMed}} \\
+\multicolumn{3}{c}{Each cell: Acc, MSE, CosSim, FeatCorr (values $\times 100$)} \\
+\midrule
+\multirow{5}{*}{e=10} & $\sigma=0.000$ & \makecell[l]{$61.72 \pm 4.38$ , $6.78 \pm 0.38$ , $0.78 \pm 0.30$ , $1.93 \pm 0.13$} \\
+ & $\sigma=0.005$ & \makecell[l]{$77.87 \pm 5.40$ , $4.73 \pm 0.12$ , $0.57 \pm 0.18$ , $1.94 \pm 0.13$} \\
+ & $\sigma=0.010$ & \makecell[l]{$76.13 \pm 6.79$ , $4.89 \pm 0.15$ , $0.34 \pm 0.27$ , $1.89 \pm 0.11$} \\
+ & $\sigma=0.020$ & \makecell[l]{$70.07 \pm 6.56$ , $5.27 \pm 0.11$ , $0.26 \pm 0.12$ , $1.85 \pm 0.06$} \\
+ & $\sigma=0.050$ & \makecell[l]{$59.58 \pm 0.07$ , $7.28 \pm 0.07$ , $0.20 \pm 0.09$ , $1.78 \pm 0.06$} \\
+\midrule
+\multirow{5}{*}{e=30} & $\sigma=0.000$ & \makecell[l]{$80.39 \pm 3.29$ , $4.66 \pm 0.19$ , $0.45 \pm 0.27$ , $1.89 \pm 0.04$} \\
+ & $\sigma=0.005$ & \makecell[l]{$84.42 \pm 0.20$ , $5.56 \pm 0.26$ , $0.38 \pm 0.19$ , $1.84 \pm 0.05$} \\
+ & $\sigma=0.010$ & \makecell[l]{$83.91 \pm 0.53$ , $5.78 \pm 0.20$ , $0.59 \pm 0.19$ , $1.96 \pm 0.06$} \\
+ & $\sigma=0.020$ & \makecell[l]{$83.54 \pm 0.10$ , $5.93 \pm 0.46$ , $0.56 \pm 0.21$ , $1.88 \pm 0.06$} \\
+ & $\sigma=0.050$ & \makecell[l]{$79.52 \pm 0.48$ , $8.67 \pm 0.16$ , $0.42 \pm 0.05$ , $1.81 \pm 0.09$} \\
+\midrule
+\multirow{5}{*}{e=100} & $\sigma=0.000$ & \makecell[l]{$81.89 \pm 0.82$ , $3.78 \pm 0.11$ , $-0.15 \pm 0.21$ , $1.75 \pm 0.09$} \\
+ & $\sigma=0.005$ & \makecell[l]{$84.15 \pm 0.35$ , $5.47 \pm 0.08$ , $0.50 \pm 0.24$ , $1.99 \pm 0.07$} \\
+ & $\sigma=0.010$ & \makecell[l]{$84.32 \pm 0.38$ , $6.19 \pm 0.35$ , $0.58 \pm 0.02$ , $1.85 \pm 0.06$} \\
+ & $\sigma=0.020$ & \makecell[l]{$84.08 \pm 0.07$ , $7.24 \pm 0.51$ , $0.63 \pm 0.04$ , $1.95 \pm 0.05$} \\
+ & $\sigma=0.050$ & \makecell[l]{$82.41 \pm 0.44$ , $7.99 \pm 0.88$ , $0.33 \pm 0.11$ , $1.83 \pm 0.14$} \\
+\bottomrule
+\end{tabular}
+\caption{Privacy-utility trade-off results (datasets 4--4)}
+\label{tab:results_4}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{llc}
+\toprule
+\multicolumn{3}{c}{\textbf{Photo}} \\
+\multicolumn{3}{c}{Each cell: Acc, MSE, CosSim, FeatCorr (values $\times 100$)} \\
+\midrule
+\multirow{5}{*}{e=10} & $\sigma=0.000$ & -- \\
+ & $\sigma=0.005$ & -- \\
+ & $\sigma=0.010$ & -- \\
+ & $\sigma=0.020$ & -- \\
+ & $\sigma=0.050$ & -- \\
+\midrule
+\multirow{5}{*}{e=30} & $\sigma=0.000$ & -- \\
+ & $\sigma=0.005$ & -- \\
+ & $\sigma=0.010$ & -- \\
+ & $\sigma=0.020$ & -- \\
+ & $\sigma=0.050$ & -- \\
+\midrule
+\multirow{5}{*}{e=100} & $\sigma=0.000$ & -- \\
+ & $\sigma=0.005$ & -- \\
+ & $\sigma=0.010$ & -- \\
+ & $\sigma=0.020$ & -- \\
+ & $\sigma=0.050$ & -- \\
+\bottomrule
+\end{tabular}
+\caption{Privacy-utility trade-off results (datasets 5--5)}
+\label{tab:results_5}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{llc}
+\toprule
+\multicolumn{3}{c}{\textbf{Amazon-ratings}} \\
+\multicolumn{3}{c}{Each cell: Acc, MSE, CosSim, FeatCorr (values $\times 100$)} \\
+\midrule
+\multirow{5}{*}{e=10} & $\sigma=0.000$ & -- \\
+ & $\sigma=0.005$ & -- \\
+ & $\sigma=0.010$ & -- \\
+ & $\sigma=0.020$ & -- \\
+ & $\sigma=0.050$ & -- \\
+\midrule
+\multirow{5}{*}{e=30} & $\sigma=0.000$ & -- \\
+ & $\sigma=0.005$ & -- \\
+ & $\sigma=0.010$ & -- \\
+ & $\sigma=0.020$ & -- \\
+ & $\sigma=0.050$ & -- \\
+\midrule
+\multirow{5}{*}{e=100} & $\sigma=0.000$ & -- \\
+ & $\sigma=0.005$ & -- \\
+ & $\sigma=0.010$ & -- \\
+ & $\sigma=0.020$ & -- \\
+ & $\sigma=0.050$ & -- \\
+\bottomrule
+\end{tabular}
+\caption{Privacy-utility trade-off results (datasets 6--6)}
+\label{tab:results_6}
+\end{table}
