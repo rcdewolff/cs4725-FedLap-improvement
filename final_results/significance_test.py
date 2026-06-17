@@ -62,7 +62,7 @@ def paired_significance(
                 "significant_p<0.05": p_val < alpha,
             })
 
-    return pd.DataFrame(rows).groupby("metric")
+    return pd.DataFrame(rows)
 
 
 if __name__ == "__main__":
