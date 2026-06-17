@@ -68,6 +68,8 @@ for metric, ylabel in labels.items():
         plt.plot(group["noise_multiplier"], group[metric], marker="o", label=dataset_name)
     plt.xlabel("Noise multiplier")
     plt.ylabel(ylabel)
+    if metric == "mse":
+        plt.yscale('logit')
     plt.title(f"{ylabel} vs noise multiplier (epochs=100)")
     plt.legend()
     plt.tight_layout()
