@@ -11,7 +11,24 @@ You can run the experiments by running (**Warning: Can take ~1h to run**):
 :
 
 ```bash
-python src/simulations/online_phase_dlg_experiments.py
+python src/simulations/online_phase_dlg_experiment.py
+```
+
+To run the 100-epoch defense ablation (no defense, clipping only, and
+clipping plus noise), use:
+
+```bash
+python src/simulations/online_phase_dp_ablation_experiment.py
+```
+
+The ablation logs the duration of every epoch and writes both a run-level CSV
+and per-client/per-epoch gradient-norm and clipping telemetry under the
+dataset's `privacy_attack/dlg_ablation` result directory.
+
+Run the ablation sequentially for all six report datasets with:
+
+```bash
+powershell -ExecutionPolicy Bypass -File .\run_ablation_experiments.ps1
 ```
 
 

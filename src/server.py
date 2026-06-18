@@ -1,3 +1,5 @@
+import time
+
 from tqdm import tqdm
 
 from src import *
@@ -107,6 +109,8 @@ class Server(Client):
         log=True,
         plot=True,
         model_type="GNN",
+        log_epoch_time=False,
+        collect_dp_stats=False,
     ):
         if log:
             LOGGER.info(f"{model_type} starts!")
@@ -120,7 +124,11 @@ class Server(Client):
         num_nodes = sum([client.num_nodes() for client in self.clients])
         coef = [client.num_nodes() / num_nodes for client in self.clients]
         average_results = []
+        self.last_joint_train_g_dp_stats = []
+        self.last_joint_train_g_epoch_times = []
+        training_started = time.perf_counter()
         for epoch in range(epochs):
+            epoch_started = time.perf_counter()
             self.reset_trainings()
 
             self.set_train_mode()
@@ -131,6 +139,46 @@ class Server(Client):
 
             if FL:
                 clients_grads = self.get_grads()
+                if collect_dp_stats:
+                    clip_norm = float(config.dp.clip_norm)
+                    separate_sfv = bool(config.dp.separate_sfv)
+                    eps = 1e-6
+                    for client_idx, client_grads in enumerate(clients_grads):
+                        all_norm = float(grads_l2_norm(client_grads, sfv_mode="all").item())
+                        sfv_norm = float(grads_l2_norm(client_grads, sfv_mode="sfv").item())
+                        non_sfv_norm = float(
+                            grads_l2_norm(client_grads, sfv_mode="non_sfv").item()
+                        )
+
+                        if separate_sfv:
+                            sfv_scale = min(1.0, clip_norm / (sfv_norm + eps))
+                            non_sfv_scale = min(
+                                1.0, clip_norm / (non_sfv_norm + eps)
+                            )
+                            would_clip = sfv_norm > clip_norm or non_sfv_norm > clip_norm
+                            min_clip_scale = min(sfv_scale, non_sfv_scale)
+                        else:
+                            min_clip_scale = min(1.0, clip_norm / (all_norm + eps))
+                            sfv_scale = min_clip_scale
+                            non_sfv_scale = min_clip_scale
+                            would_clip = all_norm > clip_norm
+
+                        self.last_joint_train_g_dp_stats.append(
+                            {
+                                "epoch": epoch + 1,
+                                "client_idx": client_idx,
+                                "raw_grad_norm": all_norm,
+                                "raw_sfv_grad_norm": sfv_norm,
+                                "raw_non_sfv_grad_norm": non_sfv_norm,
+                                "sfv_clip_scale": sfv_scale,
+                                "non_sfv_clip_scale": non_sfv_scale,
+                                "min_clip_scale": min_clip_scale,
+                                "would_clip": bool(would_clip),
+                                "dp_enabled": bool(config.dp.enabled),
+                                "noise_multiplier": float(config.dp.noise_multiplier),
+                                "clip_norm": clip_norm,
+                            }
+                        )
                 if config.dp.enabled:
                     for client_grads in clients_grads:
                         clip_grads_(
@@ -150,6 +198,15 @@ class Server(Client):
                 self.share_grads(grads)
 
             self.update_models()
+
+            epoch_seconds = time.perf_counter() - epoch_started
+            self.last_joint_train_g_epoch_times.append(epoch_seconds)
+            if log_epoch_time:
+                total_seconds = time.perf_counter() - training_started
+                LOGGER.info(
+                    f"Epoch {epoch + 1}/{epochs} completed in {epoch_seconds:.2f}s "
+                    f"(total {total_seconds:.2f}s)."
+                )
 
             if log:
                 bar.set_postfix(average_result)
