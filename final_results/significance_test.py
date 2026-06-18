@@ -1,65 +1,69 @@
 """
-For each (dataset, metric), tests whether the difference between
-noise_multiplier=0.0 and noise_multiplier=0.05 (at train_epochs=100) is
-statistically significant.
+Tests whether each metric shows a significant TREND across the full noise
+sweep (at a fixed train_epochs) -- using all noise levels and all seeds,
+not just the noise=0 vs noise=0.05 endpoints.
 
-Uses a PAIRED t-test (scipy.stats.ttest_rel), pairing the two noise
-conditions by seed -- since seed 1/2/3 represents the same run setup
-in both conditions, a paired test is more appropriate (and more
-powerful) than an unpaired/independent t-test.
+Two complementary tests are run per (dataset, metric):
 
-IMPORTANT CAVEAT: with only 3 seeds, this comparison has very low
-statistical power (2 degrees of freedom). A non-significant result
-here does NOT mean there's no real effect -- it may just mean 3 runs
-aren't enough to detect it. Take p-values as a rough guide, not proof.
-(A non-parametric alternative, Wilcoxon signed-rank, was considered
-but with n=3 it cannot reach p<0.05 at all -- there are only 8 possible
-sign patterns, so the smallest achievable two-sided p-value is 0.25.
-A parametric t-test is the only option that's even capable of
-detecting significance with this few runs.)
+1. Linear regression slope test (scipy.stats.linregress)
+   Tests for a LINEAR relationship between noise_multiplier and the metric.
+   H0: slope == 0. Good general-purpose trend test, but assumes the
+   relationship is roughly a straight line -- a few non-monotonic "wiggle"
+   points can pull the p-value up even if there's a real overall trend.
 
-Expects RAW per-run data (not the aggregated summary table), with
-columns: dataset, seed, train_epochs, noise_multiplier, and the metric
-columns (test_acc, mse, cosine_sim, feat_corr, ...).
+2. Spearman rank correlation (scipy.stats.spearmanr)
+   Tests for a MONOTONIC relationship (doesn't assume linearity, only that
+   higher noise tends to rank higher/lower on the metric). More robust to
+   the kind of local non-monotonic noise you noticed in some plots, since
+   it only depends on rank order, not exact values.
+
+Why not Mann-Kendall? It's the more "textbook" monotonic-trend test for
+ordered data, but for this design (a handful of fixed noise levels, several
+seeds at each) it reduces to something very close to Spearman's correlation
+anyway -- so Spearman is kept here for simplicity, as requested.
+
+Both tests use every (noise_multiplier, seed) data point for a given
+dataset/metric/epochs combination (e.g. 5 noise levels x 3 seeds = 15
+points), so the result reflects the trend across the whole sweep rather
+than a comparison of just two settings.
+
+Expects RAW per-run data (not the aggregated summary table), with columns:
+dataset, seed, train_epochs, noise_multiplier, and the metric columns.
 """
 
 import pandas as pd
 from scipy import stats
 
 
-def paired_significance(
+def trend_significance(
     df,
     datasets,
     metrics=("test_acc", "mse", "cosine_sim", "feat_corr"),
     epochs=100,
-    noise_a=0.0,
-    noise_b=0.05,
     alpha=0.05,
 ):
     rows = []
     for dataset in datasets:
         sub = df[(df["dataset"] == dataset) & (df["train_epochs"] == epochs)]
-        a = sub[sub["noise_multiplier"] == noise_a][["seed"] + list(metrics)]
-        b = sub[sub["noise_multiplier"] == noise_b][["seed"] + list(metrics)]
-        merged = pd.merge(a, b, on="seed", suffixes=("_a", "_b"))
-
-        if len(merged) == 0:
-            print(f"Warning: no matching seeds for {dataset} at epochs={epochs}")
-            continue
+        x = sub["noise_multiplier"].values
 
         for metric in metrics:
-            vals_a = merged[f"{metric}_a"]
-            vals_b = merged[f"{metric}_b"]
-            t_stat, p_val = stats.ttest_rel(vals_a, vals_b)
+            y = sub[metric].values
+
+            lin = stats.linregress(x, y)
+            rho, p_rho = stats.spearmanr(x, y)
+
             rows.append({
                 "dataset": dataset,
                 "metric": metric,
-                "n_pairs": len(merged),
-                f"mean_noise{noise_a}": vals_a.mean(),
-                f"mean_noise{noise_b}": vals_b.mean(),
-                "t_stat": t_stat,
-                "p_value": p_val,
-                "significant_p<0.05": p_val < alpha,
+                "n_points": len(x),
+                "slope": lin.slope,
+                "pearson_r": lin.rvalue,
+                "linreg_p_value": lin.pvalue,
+                "linreg_significant": lin.pvalue < alpha,
+                "spearman_rho": rho,
+                "spearman_p_value": p_rho,
+                "spearman_significant": p_rho < alpha,
             })
 
     return pd.DataFrame(rows)
@@ -84,6 +88,6 @@ if __name__ == "__main__":
         dfs.append(d)
     data = pd.concat(dfs, ignore_index=True)
 
-    result = paired_significance(data, datasets=dataset_names)
+    result = trend_significance(data, datasets=dataset_names)
     result.to_csv("significance_results.csv", index=False)
     print(result)

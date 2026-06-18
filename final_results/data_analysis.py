@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 from pathlib import Path
 
 # ---------------------------------------------------------------
@@ -60,12 +61,29 @@ summary_100.to_csv("summary_table_100epochs.csv", index=False)
 
 plot_data = data[data["train_epochs"] == 100]
 agg = plot_data.groupby(["dataset", "noise_multiplier"])[metrics].mean().reset_index()
+summary_100_raw = summary[summary["train_epochs"] == 100].copy()
+
+
+def display_name(dataset_name):
+    if dataset_name == "chameleon":
+        return "Chameleon"
+    if dataset_name == "Photo":
+        return "Amazon Photo"
+    return dataset_name
 
 for metric, ylabel in labels.items():
     plt.figure()
     for dataset_name, group in agg.groupby("dataset"):
         group = group.sort_values("noise_multiplier")
-        plt.plot(group["noise_multiplier"], group[metric], marker="o", label=dataset_name)
+        name = display_name(dataset_name)
+        # UNCOMMENT TO ALSO PLOT STANDARD DEVIATIONS
+        # stds = summary[summary["dataset"] == dataset_name]
+        # stds = stds[stds["train_epochs"] == 100]
+        # stds = stds[f"{metric}_std"]
+        x = group["noise_multiplier"].values
+        y = group[metric].values
+        line, = plt.plot(x, y, marker="o", label=name)
+        # plt.fill_between(x, y - stds, y + stds, color=line.get_color(), alpha=0.2)
     plt.xlabel("Noise multiplier")
     plt.ylabel(ylabel)
     if metric == "mse":
@@ -73,9 +91,56 @@ for metric, ylabel in labels.items():
     plt.title(f"{ylabel} vs noise multiplier (epochs=100)")
     plt.legend()
     plt.tight_layout()
-    plt.savefig(f"{metric}_vs_noise_epochs100.png", dpi=150)
+    plt.savefig(f"{metric}_vs_noise_epochs100_lines.png", dpi=150)
     plt.close()
 
+metric_colors = {
+    "mse": "RdYlGn",
+    "cosine_sim": "RdYlGn_r",
+    "feat_corr": "RdYlGn_r",
+    "test_acc": "RdYlGn"
+}
+
+for metric, ylabel in labels.items():
+    heatmap_means = summary_100_raw.pivot(index="dataset", columns="noise_multiplier", values=f"{metric}_mean")
+    heatmap_stds = summary_100_raw.pivot(index="dataset", columns="noise_multiplier", values=f"{metric}_std")
+
+    heatmap_means = heatmap_means.reindex(dataset_names)
+    heatmap_stds = heatmap_stds.reindex(dataset_names)
+    heatmap_means = heatmap_means.reindex(sorted(heatmap_means.columns), axis=1)
+    heatmap_stds = heatmap_stds.reindex(heatmap_means.columns, axis=1)
+
+    mean_values = heatmap_means.to_numpy() * 100
+    std_values = heatmap_stds.to_numpy() * 100
+    display_values = np.array([
+        [f"{mean_values[i, j]:.2f} \n+-\n {std_values[i, j]:.2f}" for j in range(mean_values.shape[1])]
+        for i in range(mean_values.shape[0])
+    ])
+
+    plt.figure(figsize=(1.4 * mean_values.shape[1] + 3, 0.9 * mean_values.shape[0] + 2.5))
+    image = plt.imshow(mean_values, aspect="auto", cmap=metric_colors[metric])
+    plt.colorbar(image, label=ylabel)
+
+    plt.xticks(np.arange(mean_values.shape[1]), [str(x) for x in heatmap_means.columns], rotation=45, ha="right")
+    plt.yticks(np.arange(mean_values.shape[0]), [display_name(name) for name in heatmap_means.index])
+    plt.xlabel("Noise multiplier")
+    plt.ylabel("Dataset")
+    plt.title(f"{ylabel} heatmap (epochs=100, values are x100)")
+
+    meanvalue = np.nanmean(mean_values)
+    text_color_threshold_low = np.nanquantile(mean_values, q=.05) if metric == "cosine_sim" else np.nanquantile(mean_values, q=.2)
+    text_color_threshold_high = np.nanquantile(mean_values, q=.8)
+    for i in range(mean_values.shape[0]):
+        for j in range(mean_values.shape[1]):
+            value = mean_values[i, j]
+            if np.isnan(value):
+                continue
+            text_color = "black" if text_color_threshold_low <= value <= text_color_threshold_high else "white"
+            plt.text(j, i, display_values[i, j], ha="center", va="center", color=text_color, fontsize=12)
+
+    plt.tight_layout()
+    plt.savefig(f"{metric}_vs_noise_epochs100.png", dpi=150)
+    plt.close()
 # ---------------------------------------------------------------
 # 3. Effect of train_epochs on the privacy/utility tradeoff
 #    One subplot per dataset, one line per epoch count, test_acc vs noise
