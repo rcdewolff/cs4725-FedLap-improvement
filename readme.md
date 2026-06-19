@@ -41,7 +41,9 @@ Run the ablation sequentially for all six report datasets with:
 powershell -ExecutionPolicy Bypass -File .\run_ablation_experiments.ps1
 ```
 
+## MI attack
 
+The main relevant code for the Membership Inference attack experiment lives in `src/simulations/mi_noise_sweep.py`. Run this file with different datasets (configured in `.env`) to replicate the experiments.
 
 # (ORIGINAL README) FedLap
 ## To run the code
