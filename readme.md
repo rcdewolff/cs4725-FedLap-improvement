@@ -4,15 +4,25 @@ This repo was forked from FedLap to try to improve it for a university project (
 
 How to set up your Python environment: Create a virtual environment with Python 3.10, activate it, and run `pip install -r requirements.txt`.
 
+## DLG attack
+
 The main relevant code for our paper (after some failed experimentation attempts) lives in the `src/simulations/gradient_inversion_attack.py` and `src/simulations/online_phase_dlg_experiment.py`.
 
-You can run the experiments by running (**Warning: Can take ~1h to run**):
-
-:
+You can run the experiments on one dataset (set path in `.env`) by running (**Warning: Can take 30 minutes to 3 hours to run, depending on dataset**):
 
 ```bash
 python src/simulations/online_phase_dlg_experiment.py
 ```
+
+You can also run all experiments sequentially by running (may need to adjust path to virtual environment activation script):
+
+```bash
+bash run_experiments.sh
+```
+
+Final results and data_analysis related code can be found in the `final_results/` folder.
+
+### Ablation study DLG attack
 
 To run the 100-epoch defense ablation (no defense, clipping only, and
 clipping plus noise), use:
